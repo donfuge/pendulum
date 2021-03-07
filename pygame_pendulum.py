@@ -149,7 +149,7 @@ class PygView(object):
         self.all_sprites = pygame.sprite.Group()
         # self.all_sprites.add(self.pendulum)
         self.projectile_no = 0
-        self.projectile_no_max = 100
+        self.projectile_no_max = 200
         self.projectiles = []
 
 
