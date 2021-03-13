@@ -6,5 +6,7 @@ You must defend Earth using your high-tech pendulum, which shoots armor-piercing
 ## Control:
 
 Accelerate pendulum: LEFT - RIGHT
+
 Fire: SPACE
+
 Quit: ESCAPE
