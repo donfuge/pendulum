@@ -117,9 +117,9 @@ class Pendulum(pygame.sprite.Sprite):
         self.acc = vec(0, 0)
 
         if pressed_keys[pygame.K_LEFT]:
-            self.theta_dot -= ACC
+            self.theta_dot -= np.cos(self.theta) * ACC
         if pressed_keys[pygame.K_RIGHT]:
-            self.theta_dot += ACC
+            self.theta_dot += np.cos(self.theta) * ACC
 
         y = np.asarray([self.theta, self.theta_dot])
 
@@ -195,7 +195,7 @@ class PygView(object):
             # self.draw_text("FPS: {:6.3}{}PLAYTIME: {:6.3} SECONDS \r theta: {:6.03}".format(
             #                 self.clock.get_fps(), " ", self.playtime, self.pendulum.theta))
 
-            pygame.display.flip()
+            
             self.screen.blit(self.background, (0, 0))
 
             # spawn enemy
@@ -226,12 +226,6 @@ class PygView(object):
 
             self.pendulum.move(pressed_keys)
 
-            # collision: check if any enemies hit the pendulum
-            collided = pygame.sprite.spritecollide(self.pendulum, self.enemies, dokill = False)
-
-            if collided:
-                running = False
-
             for proj in self.projectiles:
                 proj.move()
 
@@ -243,7 +237,7 @@ class PygView(object):
             for enemy in self.enemies:
                 enemy.move()
 
-                # collisions: check if hit by projectile(s)
+                # collisions: check if enemy is hit by projectile(s)
 
                 collided = pygame.sprite.spritecollideany(
                     enemy, self.projectiles)
@@ -266,18 +260,32 @@ class PygView(object):
             self.draw_text("Ammo:{}".format(
                 self.projectile_no_max - self.projectile_no), pos=(self.width - 200, 15))
 
+            # collision: check if any enemies hit the pendulum
+            collided = pygame.sprite.spritecollide(
+                self.pendulum, self.enemies, dokill=False)
+
+            if collided:
+                self.draw_text("GAME OVER")
+                pygame.time.delay(10)
+                pygame.display.flip()
+                pygame.event.clear()
+                event = pygame.event.wait()
+                running = False
+
+            pygame.display.flip()
+
         pygame.quit()
 
     def draw_text(self, text, pos=None):
-        """Center text in window
-        """
         fw, fh = self.font.size(text)  # fw: font width,  fh: font height
         surface = self.font.render(text, True, (255, 255, 255))
         if pos == None:
             pos = ((self.width - fw) // 2, (self.height - fh) // 2)
-        # // makes integer division in python3
         self.screen.blit(surface, pos)
 
+    def game_over(self):
+        self.draw_text("GAME OVER")
+        event = pygame.event.wait()
 ####
 
 
