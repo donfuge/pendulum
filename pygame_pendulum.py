@@ -292,4 +292,4 @@ class PygView(object):
 if __name__ == '__main__':
 
     # call with width of window and fps
-    PygView(WIDTH, 400, fps=60).run()
+    PygView(WIDTH, 600, fps=60).run()
